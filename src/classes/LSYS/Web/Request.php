@@ -11,49 +11,49 @@ class Request{
 	 * 是否是get请求
 	 * @return bool
 	 */
-	public static function is_get(){
+	public static function isGet(){
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='GET';
 	}
 	/**
 	 * 是否是post请求
 	 * @return bool
 	 */
-	public static function is_post(){
+	public static function isPost(){
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='POST';
 	}
 	/**
 	 * 是否是put请求
 	 * @return bool
 	 */
-	public static function is_put(){
+	public static function isPut(){
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='PUT';
 	}
 	/**
 	 * 是否是head请求
 	 * @return bool
 	 */
-	public static function is_head(){
+	public static function isHead(){
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='HEAD';
 	}
 	/**
 	 * 是否是options请求
 	 * @return bool
 	 */
-	public static function is_options(){
+	public static function isOptions(){
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='OPTIONS';
 	}
 	/**
 	 * 是否是DELETE请求
 	 * @return bool
 	 */
-	public static function is_delete(){
+	public static function isDelete(){
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='DELETE';
 	}
 	/**
 	 * 是否是AJAX请求
 	 * @return bool
 	 */
-	public static function is_xml_http_request(){
+	public static function isXmlHttpRequest(){
 		return isset($_SERVER["HTTP_X_REQUESTED_WITH"])
 			&& strtolower($_SERVER["HTTP_X_REQUESTED_WITH"])=="xmlhttprequest";
 	}
@@ -61,7 +61,7 @@ class Request{
 	 * 是否是HTTPS请求
 	 * @return bool
 	 */
-	public static function is_ssl(){
+	public static function isSsl(){
 		$ssl=isset($_SERVER['HTTPS'])&&strtolower($_SERVER['HTTPS']) == "on";
 		if (isset($_SERVER['REQUEST_SCHEME'])&&$_SERVER['REQUEST_SCHEME']=='https')$ssl=true;
 		return $ssl;
@@ -70,7 +70,7 @@ class Request{
 	 * 是否是代理请求
 	 * @return bool
 	 */
-	public static function is_proxy(){
+	public static function isProxy(){
 		if(!empty($_SERVER['HTTP_VIA'])) return true;
 		return false;
 	}
@@ -79,7 +79,7 @@ class Request{
 	 * @return string
 	 */
 	public static function site($domain=null,$is_ssl=null,$port=true){
-	    $is_ssl=$is_ssl===null?self::is_ssl():$is_ssl;
+	    $is_ssl=$is_ssl===null?self::isSsl():$is_ssl;
 	    if ($is_ssl)$t="https://";
 		else $t=self::scheme().'://';
 		$t.=$domain?$domain:self::domain();
@@ -130,7 +130,7 @@ class Request{
 	 * @param string $default
 	 * @return mixed
 	 */
-	public static function query_string($default=''){
+	public static function queryString($default=''){
 		if(isset($_SERVER['QUERY_STRING']))return $_SERVER['QUERY_STRING'];
 		return $default;
 	}
@@ -208,7 +208,7 @@ class Request{
 	 * 获取请求路径
 	 * @return string
 	 */
-	public static function request_uri(){
+	public static function requestUri(){
 		if (isset($_SERVER['REQUEST_URI'])) return $_SERVER['REQUEST_URI'];
 		return '/';
 	}
@@ -216,7 +216,7 @@ class Request{
 	 * 获取客户端USER_AGENT
 	 * @return string
 	 */
-	public static function user_agent(){
+	public static function userAgent(){
 		return isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
 	}
 	/**
@@ -294,7 +294,7 @@ class Request{
 	 * @param string $accept ACCEPT_* 常量
 	 * @return boolean
 	 */
-	public static function is_accept($accept){
+	public static function isAccept($accept){
 		if (!isset($_SERVER['HTTP_ACCEPT']))return false;
 		$accepts=explode(",", $accept);
 		foreach ($accepts as $v){
@@ -307,7 +307,7 @@ class Request{
 	 * @param string $accepts 可接受的accept数组
 	 * @return string
 	 */
-	public static function first_accept($accepts=array()){
+	public static function firstAccept($accepts=array()){
 		if (!isset($_SERVER['HTTP_ACCEPT'])||empty($_SERVER['HTTP_ACCEPT']))return null;
 		foreach (explode(",",$_SERVER['HTTP_ACCEPT']) as $v){
 			foreach ($accepts as $accept){
@@ -322,7 +322,7 @@ class Request{
 	 * 获取输入数据
 	 * @return string
 	 */
-	public static function raw_post_data(){
+	public static function rawPostData(){
 		$data = file_get_contents('php://input');
 		return urldecode($data);
 	}
@@ -382,8 +382,8 @@ class Request{
 	 * @param string $user_agent 指定user_agent
 	 * @return boolean
 	 */
-	public static function is_client($browser,$user_agent=null){
-		$user_agent=$user_agent==null?self::user_agent():$user_agent;
+	public static function isClient($browser,$user_agent=null){
+		$user_agent=$user_agent==null?self::userAgent():$user_agent;
 		$status=false;
 		switch ($browser){
 			case self::CLIENT_BROWSER_IOS:
@@ -411,11 +411,11 @@ class Request{
 				if(preg_match("/weibo/is",$user_agent)) return true;
 				break;
 			case self::CLIENT_WAP:
-				if(self::user_agent(self::CLIENT_BROWSER_IOS)
-				||self::user_agent(self::CLIENT_WECHAT)
-				||self::user_agent(self::CLIENT_QQ)
-				||self::user_agent(self::CLIENT_BROWSER_QQ)
-				||self::user_agent(self::CLIENT_WEIBO)
+				if(self::userAgent(self::CLIENT_BROWSER_IOS)
+				||self::userAgent(self::CLIENT_WECHAT)
+				||self::userAgent(self::CLIENT_QQ)
+				||self::userAgent(self::CLIENT_BROWSER_QQ)
+				||self::userAgent(self::CLIENT_WEIBO)
 				)	return true;
 				$_SERVER['ALL_HTTP'] = isset($_SERVER['ALL_HTTP']) ? $_SERVER['ALL_HTTP'] : '';
 				$mobile_browser = 0;

@@ -25,9 +25,9 @@ class Response{
 	 * @param string $value
 	 * @return $this
 	 */
-	public function set_header($name,$value=null){
+	public function setHeader($name,$value=null){
 		if (is_array($name)){
-			foreach ($name as $k=>$v)$this->set_header($k,$v);
+			foreach ($name as $k=>$v)$this->setHeader($k,$v);
 		}else{
 			if (is_array($value))$value=implode(",",$value);
 			if (empty($value))return $this;
@@ -42,19 +42,19 @@ class Response{
 	 * 设置下载HEADER
 	 * @return $this
 	 */
-	public function set_download_header($name, $mimeType = null, $inline = false, $contentLength = null)
+	public function setDownloadHeader($name, $mimeType = null, $inline = false, $contentLength = null)
 	{
 		$disposition = $inline ? 'inline' : 'attachment';
-		$this->set_header('Pragma', 'public')
-			->set_header('Accept-Ranges', 'bytes')
-			->set_header('Expires', '0')
-			->set_header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-			->set_header('Content-Disposition', "$disposition; filename=\"$name\"");
+		$this->setHeader('Pragma', 'public')
+			->setHeader('Accept-Ranges', 'bytes')
+			->setHeader('Expires', '0')
+			->setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+			->setHeader('Content-Disposition', "$disposition; filename=\"$name\"");
 		if ($mimeType !== null) {
-			$this->set_header('Content-Type', $mimeType);
+			$this->setHeader('Content-Type', $mimeType);
 		}
 		if ($contentLength !== null) {
-			$this->set_header('Content-Length', $contentLength);
+			$this->setHeader('Content-Length', $contentLength);
 		}
 		return $this;
 	}
@@ -62,21 +62,21 @@ class Response{
 	 * 设置重定向HEADER
 	 * @return $this
 	 */
-	public function set_redirect($uri,$code=302){
-	    $this->set_http_code($code);
+	public function setRedirect($uri,$code=302){
+	    $this->setHttpCode($code);
 		$uri=str_replace(array("\r","\n","\t"), "", $uri);
-		$this->set_header('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
-		$this->set_header('Last-Modified', gmdate("D, d M Y H:i:s") . "GMT");
-		$this->set_header('Cache-Control', "no-cache, must-revalidate");
-		$this->set_header('Pragma', "no-cache");
-		$this->set_header('location', $uri);
+		$this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
+		$this->setHeader('Last-Modified', gmdate("D, d M Y H:i:s") . "GMT");
+		$this->setHeader('Cache-Control', "no-cache, must-revalidate");
+		$this->setHeader('Pragma', "no-cache");
+		$this->setHeader('location', $uri);
 		return $this;
 	}
 	/**
 	 * 设置HTTP状态码
 	 * @return $this
 	 */
-	public function set_http_code($code){
+	public function setHttpCode($code){
 	    $this->_http_code=$code;
 	    return $this;
 	}
@@ -85,7 +85,7 @@ class Response{
 	 * @param resource $f
 	 * @return $this
 	 */
-	public function set_stream_header($f){
+	public function setStreamHeader($f){
 	    assert(is_resource($f));
 	    $meta=stream_get_meta_data($f);
 	    if(!stream_is_local($f)||$meta['stream_type']!='STDIO')return $this;
@@ -97,22 +97,22 @@ class Response{
         if($size==0)return $this;
         $size2 = $size-1;
         $range = 0;
-        $this->set_header('Content-Length', $size);
+        $this->setHeader('Content-Length', $size);
         $mine=mime_content_type($meta['uri']);
-        $this->set_header('Content-type', $mine);
+        $this->setHeader('Content-type', $mine);
         $mine=mime_content_type($meta['uri']);
-        $this->set_header('Accenpt-Ranges', 'bytes');
+        $this->setHeader('Accenpt-Ranges', 'bytes');
         $name=basename($meta['uri']);
-        $this->set_header('Content-Disposition', "attachment; filename=\"$name\"");
+        $this->setHeader('Content-Disposition', "attachment; filename=\"$name\"");
         if(isset($_SERVER['HTTP_RANGE'])) {
             http_response_code(206);
             $range = str_replace('=','-',$_SERVER['HTTP_RANGE']);
             $range = explode('-',$range);
             $range = trim($range[1]);
             $range=abs(intval($range));
-            $this->set_header('Content-Range', 'bytes '.$range.'-'.$size2.'/'.$size);
+            $this->setHeader('Content-Range', 'bytes '.$range.'-'.$size2.'/'.$size);
         } else {
-            $this->set_header('Content-Range', 'bytes 0-'.$size2.'/'.$size);
+            $this->setHeader('Content-Range', 'bytes 0-'.$size2.'/'.$size);
         }
         return $this;
 	}
@@ -120,7 +120,7 @@ class Response{
 	 * 清理已设置的HEADER
 	 * @return $this
 	 */
-	public function clear_header(){
+	public function clearHeader(){
 	    $this->_header=[];
 	    return $this;
 	}
@@ -128,14 +128,14 @@ class Response{
 	 * 获取已设置的指定HEADER
 	 * @return string
 	 */
-	public function get_header($name){
+	public function getHeader($name){
 	    return isset($this->_header[$name])?$this->_header[$name]:NULL;
 	}
 	/**
 	 * 获取已设置的所有HEADER
 	 * @return array
 	 */
-	public function get_headers($join = false){
+	public function getHeaders($join = false){
 	    if ($join==false)return $this->_header;
 	    $out=array();
 	    foreach ($this->_header as $k=>$v){
@@ -147,14 +147,14 @@ class Response{
 	 * 获取已设置HTTP状态码
 	 * @return int
 	 */
-	public function get_http_code(){
+	public function getHttpCode(){
 	    return $this->_http_code;
 	}
 	/**
 	 * 输出流,支持断点续传
 	 * @param resource $f
 	 */
-	public static function stream_output($f){
+	public static function streamOutput($f){
 	    assert(is_resource($f));
 	    $meta=stream_get_meta_data($f);
 	    if(!stream_is_local($f)||$meta['stream_type']!='STDIO'){
