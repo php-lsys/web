@@ -42,7 +42,7 @@ class Response{
 	 * 设置下载HEADER
 	 * @return $this
 	 */
-	public function setDownloadHeader($name, $mimeType = null, $inline = false, $contentLength = null)
+	public function setDownloadHeader(string $name, ?string $mimeType = null, bool $inline = false, ?int $contentLength = null)
 	{
 		$disposition = $inline ? 'inline' : 'attachment';
 		$this->setHeader('Pragma', 'public')
@@ -62,7 +62,7 @@ class Response{
 	 * 设置重定向HEADER
 	 * @return $this
 	 */
-	public function setRedirect($uri,$code=302){
+	public function setRedirect(string $uri,int $code=302){
 	    $this->setHttpCode($code);
 		$uri=str_replace(array("\r","\n","\t"), "", $uri);
 		$this->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
@@ -76,7 +76,7 @@ class Response{
 	 * 设置HTTP状态码
 	 * @return $this
 	 */
-	public function setHttpCode($code){
+	public function setHttpCode(int $code){
 	    $this->_http_code=$code;
 	    return $this;
 	}
@@ -126,7 +126,7 @@ class Response{
 	}
 	/**
 	 * 获取已设置的指定HEADER
-	 * @return string
+	 * @return string|NULL
 	 */
 	public function getHeader($name){
 	    return isset($this->_header[$name])?$this->_header[$name]:NULL;
@@ -135,7 +135,7 @@ class Response{
 	 * 获取已设置的所有HEADER
 	 * @return array
 	 */
-	public function getHeaders($join = false){
+	public function getHeaders(bool $join = false):array{
 	    if ($join==false)return $this->_header;
 	    $out=array();
 	    foreach ($this->_header as $k=>$v){
@@ -147,7 +147,7 @@ class Response{
 	 * 获取已设置HTTP状态码
 	 * @return int
 	 */
-	public function getHttpCode(){
+	public function getHttpCode():?int{
 	    return $this->_http_code;
 	}
 	/**

@@ -11,42 +11,42 @@ class Request{
 	 * 是否是get请求
 	 * @return bool
 	 */
-	public static function isGet(){
+	public static function isGet():bool{
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='GET';
 	}
 	/**
 	 * 是否是post请求
 	 * @return bool
 	 */
-	public static function isPost(){
+	public static function isPost():bool{
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='POST';
 	}
 	/**
 	 * 是否是put请求
 	 * @return bool
 	 */
-	public static function isPut(){
+	public static function isPut():bool{
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='PUT';
 	}
 	/**
 	 * 是否是head请求
 	 * @return bool
 	 */
-	public static function isHead(){
+	public static function isHead():bool{
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='HEAD';
 	}
 	/**
 	 * 是否是options请求
 	 * @return bool
 	 */
-	public static function isOptions(){
+	public static function isOptions():bool{
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='OPTIONS';
 	}
 	/**
 	 * 是否是DELETE请求
 	 * @return bool
 	 */
-	public static function isDelete(){
+	public static function isDelete():bool{
 		return isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='DELETE';
 	}
 	/**
@@ -61,7 +61,7 @@ class Request{
 	 * 是否是HTTPS请求
 	 * @return bool
 	 */
-	public static function isSsl(){
+	public static function isSsl():bool{
 		$ssl=isset($_SERVER['HTTPS'])&&strtolower($_SERVER['HTTPS']) == "on";
 		if (isset($_SERVER['REQUEST_SCHEME'])&&$_SERVER['REQUEST_SCHEME']=='https')$ssl=true;
 		return $ssl;
@@ -70,7 +70,7 @@ class Request{
 	 * 是否是代理请求
 	 * @return bool
 	 */
-	public static function isProxy(){
+	public static function isProxy():bool{
 		if(!empty($_SERVER['HTTP_VIA'])) return true;
 		return false;
 	}
@@ -78,7 +78,7 @@ class Request{
 	 * 获取当前站点地址
 	 * @return string
 	 */
-	public static function site($domain=null,$is_ssl=null,$port=true){
+	public static function site($domain=null,$is_ssl=null,$port=true):string{
 	    $is_ssl=$is_ssl===null?self::isSsl():$is_ssl;
 	    if ($is_ssl)$t="https://";
 		else $t=self::scheme().'://';
@@ -92,26 +92,26 @@ class Request{
 	 * referer
 	 * @return string
 	 */
-	public static function referer($default=null){
-		if (isset($_SERVER['HTTP_REFERER'])) return $_SERVER['HTTP_REFERER'];
+	public static function referer($default=null):?string{
+	    if (isset($_SERVER['HTTP_REFERER'])) return strval($_SERVER['HTTP_REFERER']);
 		return $default;
 	}
 	/**
 	 * domain
 	 * @return string
 	 */
-	public static function domain(){
+	public static function domain():string{
 		$host='localhost';
-		if (isset($_SERVER['SERVER_NAME'])) $host=$_SERVER['SERVER_NAME'];
-		if (isset($_SERVER['HTTP_HOST'])) $host=$_SERVER['HTTP_HOST'];
+		if (isset($_SERVER['SERVER_NAME'])) $host=strval($_SERVER['SERVER_NAME']);
+		if (isset($_SERVER['HTTP_HOST'])) $host=strval($_SERVER['HTTP_HOST']);
 		return $host;
 	}
 	/**
 	 * PORT
 	 * @return string
 	 */
-	public static function port(){
-		if(isset($_SERVER['SERVER_PORT']))return $_SERVER['SERVER_PORT'];
+	public static function port():string{
+	    if(isset($_SERVER['SERVER_PORT']))return strval($_SERVER['SERVER_PORT']);
 		return '80';
 	}
 	/**
@@ -120,8 +120,8 @@ class Request{
 	 * @param string $default
 	 * @return mixed
 	 */
-	public static function scheme($default='http'){
-		if(isset($_SERVER['REQUEST_SCHEME']))return $_SERVER['REQUEST_SCHEME'];
+	public static function scheme(string $default='http'):string{
+	    if(isset($_SERVER['REQUEST_SCHEME']))return strval($_SERVER['REQUEST_SCHEME']);
 		return $default;
 	}
 	/**
@@ -130,8 +130,8 @@ class Request{
 	 * @param string $default
 	 * @return mixed
 	 */
-	public static function queryString($default=''){
-		if(isset($_SERVER['QUERY_STRING']))return $_SERVER['QUERY_STRING'];
+	public static function queryString(string $default=''):string{
+	    if(isset($_SERVER['QUERY_STRING']))return strval($_SERVER['QUERY_STRING']);
 		return $default;
 	}
 	/**
@@ -140,7 +140,7 @@ class Request{
 	 * @param string $default
 	 * @return mixed
 	 */
-	public static function server($name = null, $default = null){
+	public static function server(?string $name = null, $default = null){
 		if ($name===null) return $_SERVER;
 		return isset($_SERVER[$name])?$_SERVER[$name]:$default;
 	}
@@ -150,7 +150,7 @@ class Request{
 	 * @param string $default
 	 * @return mixed
 	 */
-	public static function get($name = null, $default = null){
+	public static function get(?string $name = null, $default = null){
 		if ($name===null) return $_GET;
 		return isset($_GET[$name])?$_GET[$name]:$default;
 	}
@@ -160,7 +160,7 @@ class Request{
 	 * @param string $default
 	 * @return mixed
 	 */
-	public static function request($name = null, $default = null){
+	public static function request(?string $name = null, $default = null){
 		if ($name===null) return $_REQUEST;
 		return isset($_REQUEST[$name])?$_REQUEST[$name]:$default;
 	}
@@ -170,7 +170,7 @@ class Request{
 	 * @param string $default
 	 * @return mixed
 	 */
-	public static function post($name = null, $default = null){
+	public static function post(?string $name = null, $default = null){
 		if ($name===null) return $_POST;
 		return isset($_POST[$name])?$_POST[$name]:$default;
 	}
@@ -180,7 +180,7 @@ class Request{
 	 * @param string $default
 	 * @return mixed
 	 */
-	public static function cookie($name = null, $default = null){
+	public static function cookie(?string $name = null, $default = null){
 		if ($name===null) return $_COOKIE;
 		return isset($_COOKIE[$name])?$_COOKIE[$name]:$default;
 	}
@@ -189,7 +189,7 @@ class Request{
 	 * @param string $name
 	 * @return array
 	 */
-	public static function files($name = null){
+	public static function files(?string $name = null){
 		if ($name===null) return $_FILES;
 		return isset($_FILES[$name])?$_FILES[$name]:NULL;
 	}
@@ -198,7 +198,7 @@ class Request{
 	 * @param string $default
 	 * @return string
 	 */
-	public static function language($default=NULL){
+	public static function language(?string $default=NULL):?string{
 		if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
 			return str_replace("-", "_",substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0,5));
 		}
@@ -208,46 +208,46 @@ class Request{
 	 * 获取请求路径
 	 * @return string
 	 */
-	public static function requestUri(){
-		if (isset($_SERVER['REQUEST_URI'])) return $_SERVER['REQUEST_URI'];
+	public static function requestUri():string{
+	    if (isset($_SERVER['REQUEST_URI'])) return strval($_SERVER['REQUEST_URI']);
 		return '/';
 	}
 	/**
 	 * 获取客户端USER_AGENT
 	 * @return string
 	 */
-	public static function userAgent(){
-		return isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
+	public static function userAgent():string{
+	    return isset($_SERVER['HTTP_USER_AGENT'])?strval($_SERVER['HTTP_USER_AGENT']):'';
 	}
 	/**
 	 * 获取客户端IP
 	 * @return string
 	 */
-	public static function ip($is_remote=false){
+	public static function ip($is_remote=false):string{
 		if ($is_remote===false&&isset($_SERVER['REMOTE_ADDR'])){
 			if ($_SERVER['REMOTE_ADDR']=='::1') return '127.0.0.1';
-			return $_SERVER['REMOTE_ADDR'];
+			return strval($_SERVER['REMOTE_ADDR']);
 		}
 		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])
 				AND isset($_SERVER['REMOTE_ADDR']))
 		{
 			$client_ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-			return array_shift($client_ips);
+			return strval(array_shift($client_ips));
 		}
 		elseif (isset($_SERVER['HTTP_X_REAL_IP'])
 				AND isset($_SERVER['REMOTE_ADDR']))
 		{
 			$client_ips = explode(',', $_SERVER['HTTP_X_REAL_IP']);
-			return array_shift($client_ips);
+			return strval(array_shift($client_ips));
 		}
 		elseif (isset($_SERVER['HTTP_CLIENT_IP'])
 				AND isset($_SERVER['REMOTE_ADDR']))
 		{
 			$client_ips = explode(',', $_SERVER['HTTP_CLIENT_IP']);
-			return array_shift($client_ips);
+			return strval(array_shift($client_ips));
 		}else if (isset($_SERVER['REMOTE_ADDR'])){
 			if ($_SERVER['REMOTE_ADDR']=='::1') return '127.0.0.1';
-			return $_SERVER['REMOTE_ADDR'];
+			return strval($_SERVER['REMOTE_ADDR']);
 		}
 		return '127.0.0.1';
 	}
@@ -285,16 +285,16 @@ class Request{
 	 * 获取客户端accept
 	 * @return boolean
 	 */
-	public static function accept(){
+	public static function accept():?string{
 		if (!isset($_SERVER['HTTP_ACCEPT']))return NULL;
-		return $_SERVER['HTTP_ACCEPT'];
+		return strval($_SERVER['HTTP_ACCEPT']);
 	}
 	/**
 	 * 检查客户端是否接受某些输出
 	 * @param string $accept ACCEPT_* 常量
 	 * @return boolean
 	 */
-	public static function isAccept($accept){
+	public static function isAccept($accept):bool{
 		if (!isset($_SERVER['HTTP_ACCEPT']))return false;
 		$accepts=explode(",", $accept);
 		foreach ($accepts as $v){
@@ -307,7 +307,7 @@ class Request{
 	 * @param string $accepts 可接受的accept数组
 	 * @return string
 	 */
-	public static function firstAccept($accepts=array()){
+	public static function firstAccept($accepts=array()):?string{
 		if (!isset($_SERVER['HTTP_ACCEPT'])||empty($_SERVER['HTTP_ACCEPT']))return null;
 		foreach (explode(",",$_SERVER['HTTP_ACCEPT']) as $v){
 			foreach ($accepts as $accept){
@@ -320,7 +320,7 @@ class Request{
 	}
 	/**
 	 * 获取输入数据
-	 * @return string
+	 * @return string|false
 	 */
 	public static function rawPostData(){
 		$data = file_get_contents('php://input');
@@ -382,9 +382,8 @@ class Request{
 	 * @param string $user_agent 指定user_agent
 	 * @return boolean
 	 */
-	public static function isClient($browser,$user_agent=null){
+	public static function isClient($browser,$user_agent=null):bool{
 		$user_agent=$user_agent==null?self::userAgent():$user_agent;
-		$status=false;
 		switch ($browser){
 			case self::CLIENT_BROWSER_IOS:
 				if((stripos($user_agent, "iOS")!==false||stripos($user_agent, "iphone")!==false)) return true;
